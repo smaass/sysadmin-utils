@@ -4,7 +4,7 @@ print "Looking for offenders...\n\n";
 
 my %offending_ips;
 while (<>) {
-	$matches = $_ =~ m/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]).*\[.*]\s"POST\s\/xmlrpc.php.*$/;
+	$matches = $_ =~ m/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*\[.*]\s"POST\s\/xmlrpc.php.*$/;
 	if ($matches) {
 		$offending_ips{$1}=1;
 	}
