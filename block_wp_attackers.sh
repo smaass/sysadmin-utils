@@ -13,10 +13,9 @@ while (<>) {
 }
 
 my %blocked_ips;
-my $output = qx/iptables -L INPUT/;
-my @lines = split /\n/, $output;
+my @output = `/sbin/iptables -L INPUT -n`;
 
-foreach my $line (@lines) {
+foreach my $line (@output) {
         $matches = $line =~ m/DROP.*\s([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\s.*$/;
         if ($matches) {
                 $blocked_ips{$1}=1;
@@ -34,6 +33,7 @@ if (scalar @to_block > 0) {
         my $datetime = strftime('%Y-%m-%d %H:%M:%S', localtime);
         print "[$datetime] Blocking IPs: @to_block\n";
         for $ip (@to_block) {
-                qx/iptables -A INPUT -s $ip -j DROP/;
+                `/sbin/iptables -A INPUT -s $ip -j DROP`;
+		`/usr/sbin/invoke-rc.d iptables-persistent save`;
         }
 }
